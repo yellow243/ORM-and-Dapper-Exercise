@@ -17,8 +17,21 @@ namespace ORM_Dapper
             string connString = config.GetConnectionString("DefaultConnection");
             #endregion
 
-            IDbConnection conn = new MySqlConnection(connString);
+            IDbConnection connnection = new MySqlConnection(connString);
 
+            var repos = new DapperProductRepository(connnection);
+            var conn = connnection;
+
+            repos.CreateProduct("newStuff", 20, 1);
+
+            var products = repos.GetAllProducts(); //repo belongs to the instance of the DapperProductRepository class
+
+            foreach (var prod in products)
+            {
+                Console.WriteLine($"{prod.ProductID} {prod.Name}");
+            }
+
+            #region
             DapperDepartmentRepository repo = new DapperDepartmentRepository(conn);
 
             Console.WriteLine("Hello user! Here are the current departments to choose from:");
@@ -42,13 +55,14 @@ namespace ORM_Dapper
 
             Console.WriteLine("Have a fantastic day!");
         }
-    private static void Print(IEnumerable<Department> depos)
-    {
-        foreach (var depo in depos)
+        private static void Print(IEnumerable<Department> depos)
         {
-            Console.WriteLine($"ID: {depo.DepartmentID} Name: {depo.Name}");
+            foreach (var depo in depos)
+            {
+                Console.WriteLine($"ID: {depo.DepartmentID} Name: {depo.Name}");
+            }
         }
     }
-    }
 
+    #endregion
 }
